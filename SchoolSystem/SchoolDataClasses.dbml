@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SchoolDB" Class="SchoolDataClassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=PAUL;Initial Catalog=SchoolDB;Integrated Security=True" SettingsObjectName="SchoolSystem.Properties.Settings" SettingsPropertyName="SchoolDBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Administration" Member="Administrations">
+    <Type Name="Administration">
+      <Column Name="AID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Role" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(7)" CanBeNull="true" />
+      <Association Name="Person_Administration" Member="Person" ThisKey="AID" OtherKey="ID" Type="Person" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Teacher" Member="Teachers">
+    <Type Name="Teacher">
+      <Column Name="TID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="RegNo" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Association Name="Teacher_Course" Member="Courses" ThisKey="TID" OtherKey="TID" Type="Course" />
+      <Association Name="Person_Teacher" Member="Person" ThisKey="TID" OtherKey="ID" Type="Person" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Course" Member="Courses">
+    <Type Name="Course">
+      <Column Name="CID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Year" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Semester" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="TID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Course_Qualification_Course" Member="Qualification_Courses" ThisKey="CID" OtherKey="CID" Type="Qualification_Course" />
+      <Association Name="Course_Student_Course" Member="Student_Courses" ThisKey="CID" OtherKey="CID" Type="Student_Course" />
+      <Association Name="Teacher_Course" Member="Teacher" ThisKey="TID" OtherKey="TID" Type="Teacher" IsForeignKey="true" DeleteRule="SET NULL" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Person" Member="Persons">
+    <Type Name="Person">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="LName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DOB" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Add1" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Add2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Suburb" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="State" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Postcode" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Person_Administration" Member="Administration" ThisKey="ID" OtherKey="AID" Type="Administration" Cardinality="One" />
+      <Association Name="Person_Teacher" Member="Teacher" ThisKey="ID" OtherKey="TID" Type="Teacher" Cardinality="One" />
+      <Association Name="Person_Student" Member="Student" ThisKey="ID" OtherKey="SID" Type="Student" Cardinality="One" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Qualification" Member="Qualifications">
+    <Type Name="Qualification">
+      <Column Name="QCode" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="QName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Duration" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Qualification_Qualification_Course" Member="Qualification_Courses" ThisKey="QCode" OtherKey="QCode" Type="Qualification_Course" />
+      <Association Name="Qualification_Student" Member="Students" ThisKey="QCode" OtherKey="QCode" Type="Student" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Qualification_Course" Member="Qualification_Courses">
+    <Type Name="Qualification_Course">
+      <Column Name="QCode" Type="System.String" DbType="VarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Course_Qualification_Course" Member="Course" ThisKey="CID" OtherKey="CID" Type="Course" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="Qualification_Qualification_Course" Member="Qualification" ThisKey="QCode" OtherKey="QCode" Type="Qualification" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student" Member="Students">
+    <Type Name="Student">
+      <Column Name="SID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Sdate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="QCode" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Student_Student_Course" Member="Student_Courses" ThisKey="SID" OtherKey="SID" Type="Student_Course" />
+      <Association Name="Person_Student" Member="Person" ThisKey="SID" OtherKey="ID" Type="Person" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="Qualification_Student" Member="Qualification" ThisKey="QCode" OtherKey="QCode" Type="Qualification" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student_Course" Member="Student_Courses">
+    <Type Name="Student_Course">
+      <Column Name="SID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Mark" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Course_Student_Course" Member="Course" ThisKey="CID" OtherKey="CID" Type="Course" IsForeignKey="true" />
+      <Association Name="Student_Student_Course" Member="Student" ThisKey="SID" OtherKey="SID" Type="Student" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+</Database>
